@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import './App.css';
 
+// import { Analytics } from "@vercel/analytics/react"
+
 // --- PAGES ---
 import Home from './components/pages/Home';
 import Entry from './components/pages/Entry';
@@ -10,12 +12,13 @@ import Settings from './components/pages/Settings';
 
 
 // --- MAIN ---
+const apiUrl = process.env.REACT_APP_API_URL;
 
 function App() {
   const [setMessage] = useState('');
 
   useEffect(() => {
-    fetch('/')
+    fetch(`${apiUrl}/`)
       .then((response) => response.text())
       .then((data) => setMessage(data))
       .catch((error) => console.error(`Error: ${error}`));

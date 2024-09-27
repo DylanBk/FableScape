@@ -12,7 +12,7 @@ const user_router = require('./routes/user-routes.js');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-    origin: "http://localhost:3001",
+    origin: "fablescape-6b72e6pzs-dylans-projects-67c9a75c.vercel.app",
     credentials: true
 }))
 
@@ -39,12 +39,16 @@ function handleIndexRoutes() {
 }
 
 // main routes
+app.get('*', (req, res) => {
+    sendFile(index_path);
+});
+
 app.get('/', handleIndexRoutes);
 app.get('/home', handleIndexRoutes);
 app.get('/index', handleIndexRoutes);
 
 // user routes
-app.get('/signin', user_router)
+app.get('api/users', user_router)
 
 
 // --- MAIN ---

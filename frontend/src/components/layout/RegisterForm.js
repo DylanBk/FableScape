@@ -3,13 +3,15 @@ import { Link } from 'react-router-dom';
 
 const button = require('../../icons/button.png');
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 function RegisterForm() {
     return (
         <div>
             <div id="register-form">
                 <form
                     className="h-2/5 w-3/4 md:w-1/2 absolute left-1/2 top-1/2 flex flex-col items-center justify-center p-8 border border-accent bg-black bg-opacity-30 -translate-x-1/2 -translate-y-1/2 smooth-resize"
-                    action="/api/users/signup"
+                    action={`${apiUrl}/api/users/signup`}
                     method="post">
                     <label className="text-white font-cinzel">Username</label>
                         <input

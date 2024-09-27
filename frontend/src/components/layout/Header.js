@@ -44,17 +44,17 @@ function Header() {
                     <Link className="hover:underline-arrow-small">
                         Create a Story
                     </Link>
+                    <Link
+                        className="absolute top-1/2 right-52 text-sm sm:text-base md:text-lg lg:text-xl text-white font-cinzel -translate-y-1/2"
+                        to="/play">
+                        <p className="w-20 mx-auto text-center hover:underline-arrow-small">Play</p>
+                    </Link>
                 </div>
             )}
             <Link
                 className="absolute left-1/2 top-1/2 text-white font-cinzel-decorative text-2xl sm:text-4xl xl:text-5xl -translate-x-1/2 -translate-y-1/2 smooth-resize"
                 to="/">
                 FableScape
-            </Link>
-            <Link
-                className="absolute top-1/2 right-52 text-sm sm:text-base md:text-lg lg:text-xl text-white font-cinzel -translate-y-1/2"
-                to="/play">
-                <p className="w-20 mx-auto text-center hover:underline-arrow-small">Play</p>
             </Link>
             <Link
                 className="absolute top-1/2 right-4 -translate-y-1/2 sm:hover:scale-105 smooth-resize"

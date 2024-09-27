@@ -56,15 +56,19 @@ function Header() {
                 to="/">
                 FableScape
             </Link>
-            <Link
-                className="absolute top-1/2 right-4 -translate-y-1/2 sm:hover:scale-105 smooth-resize"
-                to="/login">
-                <img
-                    className="h-8 sm:h-10 md:h-14 lg:h-16 relative smooth-resize"
-                    src={button}
-                    alt="Button Background"/>
-                <p className="absolute top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 text-sm sm:text-base md:text-lg lg:text-xl font-cinzel smooth-resize">Login</p>
-            </Link>
+            {window.location.pathname.includes("login") || window.location.pathname.includes("signup") ? (
+                <></>
+            ) : (
+                <Link
+                    className="absolute top-1/2 right-4 -translate-y-1/2 sm:hover:scale-105 smooth-resize"
+                    to="/login">
+                    <img
+                        className="h-8 sm:h-10 md:h-14 lg:h-16 relative smooth-resize"
+                        src={button}
+                        alt="Button Background"/>
+                    <p className="absolute top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 text-sm sm:text-base md:text-lg lg:text-xl font-cinzel smooth-resize">Login</p>
+                </Link>
+            )}
         </div>
     )
 }

@@ -4,6 +4,7 @@ import useWindowDimensions from "../../utils/getWindowDimensions";
 
 const burger_menu = require('../../icons/burger-menu.png');
 const button = require('../../icons/button.png')
+const plus_symbol = require('../../icons/plus-white.png');
 
 function Header() {
     var winDimensions = useWindowDimensions();
@@ -26,6 +27,7 @@ function Header() {
         <div
             id="header"
             className={`${headerHeight} w-full relative flex flex-row bg-primary shadow-2xl shadow-black smooth-resize`}
+            role="banner"
             ref={headerRef}>
             {winWidth < 468 ? (
                 <button>
@@ -35,20 +37,25 @@ function Header() {
                         alt="Burger Menu Icon"></img>
                     </button>
             ) : (
-                <div className="flex gap-4 ml-4 my-auto text-sm sm:text-base md:text-lg lg:text-xl text-white font-cinzel">
-                    <Link 
-                        className="hover:underline-arrow-small"
-                        to="hub">
-                        View Stories
-                    </Link>
-                    <Link className="hover:underline-arrow-small">
-                        Create a Story
-                    </Link>
-                    <Link
-                        className="absolute top-1/2 right-52 text-sm sm:text-base md:text-lg lg:text-xl text-white font-cinzel -translate-y-1/2"
-                        to="/play">
-                        <p className="w-20 mx-auto text-center hover:underline-arrow-small">Play</p>
-                    </Link>
+                <div className="flex items-center gap-4 ml-2 md:ml-4 my-auto text-white font-cinzel">
+                    {location.pathname.includes("stories") ? (
+                        <></>
+                    ) : (
+                        <Link 
+                            className="text-xs sm:text-sm md:text-md lg:text-xl hover:underline-arrow-small"
+                            to="hub">
+                                View Stories
+                        </Link>
+                    )}
+                    {location.pathname.includes("create") ? (
+                        <></>
+                    ) : (
+                        <Link
+                            className="flex flex-row items-center text-xs sm:text-sm md:text-md lg:text-xl hover:underline-arrow-small"
+                            to="/">
+                            <p>Create<span className="text-4xl leading-6">+</span></p>
+                        </Link>
+                    )}
                 </div>
             )}
             <Link
@@ -60,12 +67,13 @@ function Header() {
                 <></>
             ) : (
                 <Link
-                    className="absolute top-1/2 right-4 -translate-y-1/2 sm:hover:scale-105 smooth-resize"
-                    to="/login">
+                    className="absolute top-1/2 right-8 -translate-y-1/2 sm:hover:scale-105 smooth-resize"
+                    to="/login"
+                    alt="Link to login page">
                     <img
                         className="h-8 sm:h-10 md:h-14 lg:h-16 relative smooth-resize"
                         src={button}
-                        alt="Button Background"/>
+                        alt="Login Button Background"/>
                     <p className="absolute top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 text-sm sm:text-base md:text-lg lg:text-xl font-cinzel smooth-resize">Login</p>
                 </Link>
             )}

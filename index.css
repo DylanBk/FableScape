@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+
+  .underline-arrow-small {
+    background-image: url('../public/icons/arrow-small.png');
+    background-repeat: no-repeat;
+    background-size: 55px;
+    background-position: bottom;
+  }
+
+  .underline-arrow {
+    /* background-image: url('./icons/arrow.png'); */
+    background-repeat: no-repeat;
+    background-size: 45px;
+    background-position: bottom;
+  }
+}
+
+@font-face {
+  font-family: "Cinzel";
+  src: local("Cinzel"),
+    url('../public/fonts/Cinzel-VariableFont_wght.ttf') format('opentype');
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "Cinzel Decorative";
+  src: url('../public/fonts/CinzelDecorative-Regular.ttf');
+}
+
+@font-face {
+  font-family: "Poppins";
+  src: url('../public/fonts/Poppins-Regular.ttf');
+}
+
+.font-cinzel {
+  font-family: Cinzel;
+}
+
+.font-cinzel-decorative {
+  font-family: Cinzel Decorative;
+}
+
+.font-poppins {
+  font-family: Poppins;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  background: linear-gradient(#213425, #000000);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.smooth-resize {
+  transition: all 0.1s linear;
+}

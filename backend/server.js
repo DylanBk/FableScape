@@ -4,6 +4,7 @@ const cors = require('cors');
 const path = require('path');
 require('dotenv').config();
 
+const db = require('./config/db.js');
 const user_router = require('./routes/user-routes.js');
 
 
@@ -18,18 +19,6 @@ app.use(cors({
 
 app.use(express.static(path.join(__dirname, '../frontend/build')));
 index_path = path.join(__dirname, '../frontend/build', 'index.html');
-
-// app.use('/api/users', user_router)
-
-
-// --- CONNECT CSS ---
-
-// app.get('../src/style.css', (req, res) => {
-//     console.log('Request received for index.css');
-//     res.setHeader('Content-Type', 'text/css');
-//     res.sendFile(path.join(__dirname, 'public', 'src', 'index.css'));
-// });
-
 
 // --- ROUTES ---
 

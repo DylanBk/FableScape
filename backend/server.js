@@ -4,7 +4,10 @@ const cors = require('cors');
 const path = require('path');
 require('dotenv').config();
 
-const db = require('./config/db.js');
+const db_config = require('./config/db.js');
+const db = require('./utils/db-functions.js');
+const db_path = './db/FableScapeDB.db';
+
 const user_router = require('./routes/user-routes.js');
 
 
@@ -13,7 +16,8 @@ const user_router = require('./routes/user-routes.js');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-    origin: "fablescape-6b72e6pzs-dylans-projects-67c9a75c.vercel.app",
+    // origin: "fablescape-6b72e6pzs-dylans-projects-67c9a75c.vercel.app", //TODO use in production IF hosted on Vercel
+    origin: "http://localhost:3000",
     credentials: true
 }))
 
@@ -29,7 +33,7 @@ function handleIndexRoutes() {
 
 // main routes
 app.get('*', (req, res) => {
-    sendFile(index_path);
+    res.sendFile(index_path);
 });
 
 app.get('/', handleIndexRoutes);
@@ -37,7 +41,7 @@ app.get('/home', handleIndexRoutes);
 app.get('/index', handleIndexRoutes);
 
 // user routes
-app.get('api/users', user_router)
+app.use('/api/users', user_router)
 
 
 // --- MAIN ---
@@ -45,4 +49,7 @@ app.get('api/users', user_router)
 const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {
     console.log(`Server running on https://localhost:${PORT}`);
+    if (!db_path) {
+        db.create_db();
+    }
 });

@@ -2,15 +2,18 @@ const sqlite = require('sqlite3');
 const db = require('../config/db.js');
 const bcrypt = require('bcrypt');
 
+const db_path = '../db/FableScapeDB.db';
+
 // --- PRIMITIVE CRUD FUNCTIONS ---
 
-export function create_table(table_name, column_names, data_types) {
+function create_table(table_name, column_names, data_types) {
     let columns_and_data_types = [];
     for (let [index, element] of column_names.entries()) {
         let temp = `${column_names[index]} ${data_types[index]}`;
         columns_and_data_types.push(temp);
     }
     const query = (`CREATE TABLE IF NOT EXISTS ${table_name} (${columns_and_data_types})`);
+    console.log(query);
     db.run(query, (err) => {
         if (err) {
             console.error(`Error: ${error}`);
@@ -20,13 +23,13 @@ export function create_table(table_name, column_names, data_types) {
     });
 };
 
-export function read_table(table_name) {
+function read_table(table_name) {
     return new Promise((resolve, reject) => {
         const query = `SELECT * FROM ${table_name}`;
 
         db.all(query, (err, data) => {
             if (err) {
-                console.error(`Error: ${error}`);
+                console.error(`Error: ${err}`);
                 reject(err);
             } else {
                 resolve(data);
@@ -35,7 +38,7 @@ export function read_table(table_name) {
     });
 };
 
-export function update_table(table_name, column_names, data) {
+function update_table(table_name, column_names, data) {
     column_names = column_names.join(", ");
     data = data.join(", ")
     const temp = Array(data.length).fill('?').join(', ');
@@ -44,7 +47,7 @@ export function update_table(table_name, column_names, data) {
     db.run(query, data);
 };
 
-export function delete_table(table_name) {
+function delete_table(table_name) {
     const query = `DROP TABLE ${table_name}`;
     db.run(query);
 };
@@ -52,7 +55,7 @@ export function delete_table(table_name) {
 
 // --- USER CRUD FUNCTIONS
 
-export function create_user(user_data) {
+function create_user(user_data) {
     try {
         const [email, username, password] = user_data;
         const salt = bcrypt.genSaltSync(10);
@@ -67,21 +70,26 @@ export function create_user(user_data) {
     }
 };
 
-export function read_user_by_email(email) { //! CHANGE TO PROMISE(RESOLVE, REJECT)
-    try {
+function read_user_by_email(email) {
+    return new Promise((resolve, reject) => {
         const query = `SELECT * FROM users WHERE email = ?`;
-        db.get(query, email);
-    } catch(err) {
-        console.error(`DB Func Error: ${err}`);
-    }
+        db.get(query, email, (err, data) => {
+            if (err) {
+                console.error(`Error: ${err}`);
+                reject(err);
+            } else {
+                resolve(data);
+            }
+        });
+    });
 };
 
-
 // --- MISC FUNCTIONS ---
-export function check_if_user_exists(email) {
+function check_if_user_exists(email) {
     try {
         const query = `SELECT * FROM users WHERE email = ?`;
         const check =  db.get(query, email);
+        console.log(check)
 
         if (check) {
             return true;
@@ -92,3 +100,26 @@ export function check_if_user_exists(email) {
         console.error(`DB Func Error: ${err}`);
     }
 };
+
+
+// --- SETUP FUNCTIONS ---
+function create_db() {
+    if (db_path) {
+        console.log("Database already exists")
+    } else {
+        create_table("users", ["uid", "email", "username", "password", "role"], ["INTEGER AUTOINCREMENT", "TEXT UNIQUE", "TEXT", "TEXT", "TEXT DEFAULT 'User'"]);
+        create_table("stories", ["id", "name", "description", "cover_image", "pages"]);
+        console.log("Database Created");
+    }
+};
+
+module.exports = {
+    create_table,
+    read_table,
+    update_table,
+    delete_table,
+    create_user,
+    read_user_by_email,
+    check_if_user_exists,
+    create_db
+}

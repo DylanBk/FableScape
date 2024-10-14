@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import useWindowDimensions from "../../utils/getWindowDimensions";
 
-const burger_menu = require('../../icons/burger-menu.png');
+const burger_menu = require('../../icons/burger-menu.png'); //TODO change icons to SVG and move into /public/media
 const button = require('../../icons/button.png')
-const plus_symbol = require('../../icons/plus-white.png');
+// const plus_symbol = require('../../icons/plus.svg');
 
 function Header() {
     var winDimensions = useWindowDimensions();
@@ -37,7 +37,7 @@ function Header() {
                         alt="Burger Menu Icon"></img>
                     </button>
             ) : (
-                <div className="flex items-center gap-4 ml-2 md:ml-4 my-auto text-white font-cinzel">
+                <div className="absolute left-4 top-1/2 flex flex-row items-center gap-4 ml-2 md:ml-4 text-white font-cinzel -translate-y-1/2">
                     {location.pathname.includes("stories") ? (
                         <></>
                     ) : (
@@ -51,9 +51,14 @@ function Header() {
                         <></>
                     ) : (
                         <Link
-                            className="flex flex-row items-center text-xs sm:text-sm md:text-md lg:text-xl hover:underline-arrow-small"
+                            className="w-fit flex flex-row items-center text-xs sm:text-sm md:text-md lg:text-xl hover:underline-arrow-small"
                             to="/">
-                            <p>Create<span className="text-4xl leading-6">+</span></p>
+                            <p>Create</p>
+                            <img
+                                className="h-6"
+                                src="/media/icons/plus.svg"
+                                alt="Plus Icon">
+                            </img>
                         </Link>
                     )}
                 </div>

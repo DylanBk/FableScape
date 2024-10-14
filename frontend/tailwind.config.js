@@ -10,8 +10,14 @@ module.exports = {
         secondary: "#6e1111",
         accent: "#d9a520",
         accent_dark: "#c4951d"
-      }
+      },
+      height: {
+        'calc-100-12': 'calc(100% - 15rem)',
+        'calc-100-13': 'calc(100% - 16rem)',
+        'calc-100-16': 'calc(100% - 19rem)',
+        'calc-100-18': 'calc(100% - 21rem)'
+      },
     },
   },
   plugins: [],
-}
+};

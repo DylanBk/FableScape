@@ -8,15 +8,20 @@ const db_path = '../db/FableScapeDB.db';
 
 function create_table(table_name, column_names, data_types) {
     let columns_and_data_types = [];
+
     for (let [index, element] of column_names.entries()) {
+        console.log(`i: ${index}, e: ${element}`)
         let temp = `${column_names[index]} ${data_types[index]}`;
+        console.log`temp: ${temp}`
         columns_and_data_types.push(temp);
     }
+    console.log(`col+data: ${columns_and_data_types}`)
+
     const query = (`CREATE TABLE IF NOT EXISTS ${table_name} (${columns_and_data_types})`);
     console.log(query);
     db.run(query, (err) => {
         if (err) {
-            console.error(`Error: ${error}`);
+            console.error(`Error: ${err}`);
         } else {
             console.log(`Table ${table_name} created`)
         }
@@ -104,13 +109,9 @@ function check_if_user_exists(email) {
 
 // --- SETUP FUNCTIONS ---
 function create_db() {
-    if (db_path) {
-        console.log("Database already exists")
-    } else {
-        create_table("users", ["uid", "email", "username", "password", "role"], ["INTEGER AUTOINCREMENT", "TEXT UNIQUE", "TEXT", "TEXT", "TEXT DEFAULT 'User'"]);
-        create_table("stories", ["id", "name", "description", "cover_image", "pages"]);
-        console.log("Database Created");
-    }
+    create_table("users", ["uid", "email", "username", "password", "role"], ["INTEGER AUTOINCREMENT", "TEXT UNIQUE", "TEXT", "TEXT", "TEXT DEFAULT 'User'"]);
+    create_table("stories", ["id", "name", "description", "cover_image", "pages"], ["INTEGER AUTOINCREMENT", "TEXT", "TEXT", "BLOB", "TEXT"]);
+    console.log("Database Created");
 };
 
 module.exports = {
@@ -122,4 +123,4 @@ module.exports = {
     read_user_by_email,
     check_if_user_exists,
     create_db
-}
+};

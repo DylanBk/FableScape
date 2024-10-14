@@ -2,6 +2,7 @@ import React from "react";
 import { Helmet } from 'react-helmet';
 
 import Header from "../layout/Header";
+import FeaturedStories from "../layout/FeaturedStories";
 import Footer from "../layout/Footer";
 
 function Home() {
@@ -15,6 +16,7 @@ function Home() {
             </Helmet>
 
             <Header />
+            <FeaturedStories />
             <Footer />
         </div>
     )

@@ -46,10 +46,8 @@ app.use('/api/users', user_router)
 
 // --- MAIN ---
 
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 5000
 app.listen(PORT, () => {
     console.log(`Server running on https://localhost:${PORT}`);
-    if (!db_path) {
-        db.create_db();
-    }
+    db.create_db();
 });

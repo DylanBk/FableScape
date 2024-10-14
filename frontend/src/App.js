@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import './App.css';
+import './index.css';
 
 // import { Analytics } from "@vercel/analytics/react"
 

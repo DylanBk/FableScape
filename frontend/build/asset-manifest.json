@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/static/css/main.c9cb77be.css",
+    "main.js": "/static/js/main.f45b2b15.js",
+    "static/media/epic-bg.png": "/static/media/epic-bg.6803731cdd78c8969a51.png",
+    "static/media/Poppins-Regular.ttf": "/static/media/Poppins-Regular.35d26b781dc5fda684cc.ttf",
+    "static/media/Cinzel-VariableFont_wght.ttf": "/static/media/Cinzel-VariableFont_wght.2d087b545bf495f3d86d.ttf",
+    "static/media/CinzelDecorative-Regular.ttf": "/static/media/CinzelDecorative-Regular.c243877d82654b511c69.ttf",
+    "index.html": "/index.html",
+    "main.c9cb77be.css.map": "/static/css/main.c9cb77be.css.map",
+    "main.f45b2b15.js.map": "/static/js/main.f45b2b15.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.c9cb77be.css",
+    "static/js/main.f45b2b15.js"
+  ]
+}

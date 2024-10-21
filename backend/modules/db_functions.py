@@ -11,6 +11,27 @@ def connect(db_path):
     return sqlite3.connect(db_path)
 
 
+# --- SETUP ---
+def db_exists(db_path):
+    if os.path.exists(db_path):
+        return True
+    else:
+        return False
+
+def create_db(conn):
+    if db_exists:
+        print("database already exists")
+    else:
+        conn = connect(db_path)
+        print("connected to database")
+        conn.execute("PRAGMA foreign_keys = ON")
+        print("foreign keys enabled")
+        create_table(conn, "users", ["id", "email", "username", "password", "role"], ["INTEGER PRIMARY KEY AUTOINCREMENT", "TEXT UNIQUE", "TEXT", "TEXT", "TEXT DEFAULT 'User'"])
+        create_table(conn, "stories", ["id", "name", "description", "thumbnail", "author"], ["INTEGER PRIMARY KEY AUTOINCREMENT", "TEXT", "TEXT", "BLOB", "INTEGER REFERENCES users(id)"])
+        create_table(conn, "pages", ["id", "text", "image", "story"], ["INTEGER PRIMARY KEY AUTOINCREMENT", "TEXT", "BLOB", "INTEGER REFERENCES stories(id)"])
+        print("tables added")
+
+
 # --- TABLE CRUD FUNCTIONS ---
 
 def create_table(conn, table_name, cols, dat_types):
@@ -149,3 +170,9 @@ def user_exists(conn, email):
     if res:
         return True
     return False
+
+def get_user_by_email(conn, email):
+    c = conn.cursor()
+
+    c.execute("SELECT * FROM users WHERE email = ()", (email, ))
+    return c.fetchone

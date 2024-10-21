@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import './index.css';
 
@@ -12,18 +12,8 @@ import Settings from './components/pages/Settings';
 
 
 // --- MAIN ---
-const apiUrl = process.env.REACT_APP_API_URL;
 
 function App() {
-  const [setMessage] = useState('');
-
-  useEffect(() => {
-    fetch(`${apiUrl}/`)
-      .then((response) => response.text())
-      .then((data) => setMessage(data))
-      .catch((error) => console.error(`Error: ${error}`));
-  })
-
   return (
     <Routes>
       <Route path="/" element={<Home />} />

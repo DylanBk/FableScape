@@ -2,7 +2,7 @@ import bcrypt
 import os
 import sqlite3
 
-db_path = "../instance/db.db"
+db_path = "./instance/db.db"
 
 
 # --- CONNECTION ---
@@ -12,14 +12,17 @@ def connect(db_path):
 
 
 # --- SETUP ---
-def db_exists(db_path):
+def db_exists():
     if os.path.exists(db_path):
+        print("exists")
         return True
     else:
+        print("not exist")
         return False
 
-def create_db(conn):
-    if db_exists:
+def create_db():
+    check = db_exists()
+    if check:
         print("database already exists")
     else:
         conn = connect(db_path)
@@ -30,6 +33,7 @@ def create_db(conn):
         create_table(conn, "stories", ["id", "name", "description", "thumbnail", "author"], ["INTEGER PRIMARY KEY AUTOINCREMENT", "TEXT", "TEXT", "BLOB", "INTEGER REFERENCES users(id)"])
         create_table(conn, "pages", ["id", "text", "image", "story"], ["INTEGER PRIMARY KEY AUTOINCREMENT", "TEXT", "BLOB", "INTEGER REFERENCES stories(id)"])
         print("tables added")
+        conn.close()
 
 
 # --- TABLE CRUD FUNCTIONS ---
@@ -74,20 +78,23 @@ def delete_table(conn, table_name):
 
 # --- TABLE DATA FUNCTIONS ---
 
-def add_data(conn, table_name, data):
+def add_data(conn, table_name, cols, data):
     c = conn.cursor()
 
-    data = (', ').join(data)
-    query = f"INSERT INTO {table_name} (?)"
+    temp = ', '.join(['?'] * len(cols))
+    cols = ', '.join(cols)
+    query = f"INSERT OR IGNORE INTO {table_name} ({cols}) VALUES ({temp})"
     c.execute(query, data)
 
-    conn.commit()
+    return c.lastrowid
 
 def read_data(conn, table_name, cols, id):
     c = conn.cursor()
 
     query = f"SELECT {cols} FROM {table_name} WHERE id = (?)"
-    c.execute(query, id)
+    print(query)
+    print(id)
+    c.execute(query, (id, ))
 
     return c.fetchone
 
@@ -97,7 +104,7 @@ def edit_data(conn, table_name, col, val, id):
     query = f"UPDATE {table_name} SET {col} = (?) WHERE id = (?)"
     c.execute(query, val, id)
 
-    conn.comit()
+    return c.rowcount
 
 def remove_data(conn, table_name, id):
     c = conn.cursor()
@@ -105,7 +112,7 @@ def remove_data(conn, table_name, id):
     query = f"DELETE FROM {table_name} WHERE id = (?)"
     c.execute(query, id)
 
-    conn.commit()
+    return c.rowcount
 
 
 # --- USER FUNCTIONS ---
@@ -113,7 +120,7 @@ def remove_data(conn, table_name, id):
 def create_user(conn, data):
     data[2] = gen_pw(data[2])
 
-    add_data(conn, "users", data)
+    add_data(conn, "users", ['email', 'username', 'password'], data)
 
 def read_user(conn, cols, id):
     data = read_data(conn, "users", cols, id)
@@ -131,7 +138,7 @@ def remove_user(conn, id):
 # --- STORY FUNCTIONS ---
 
 def create_story(conn, data):
-    add_data(conn, "stories", data)
+    add_data(conn, ['name', 'description', 'thumbnail', 'author'] , "stories", data)
 
 def read_story(conn, id):
     data = read_data(conn, "stories", "*", id)
@@ -176,3 +183,10 @@ def get_user_by_email(conn, email):
 
     c.execute("SELECT * FROM users WHERE email = ()", (email, ))
     return c.fetchone
+
+
+# ! --- TESTING ---
+
+def default_admin(conn):
+    add_data(conn, "users", ['email', 'username', 'password', 'role'], ['admin@domain.com', '0xadmin', 'admin', 'Admin'])
+    print('default admin account created')

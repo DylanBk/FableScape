@@ -3,6 +3,7 @@ import { Helmet } from "react-helmet";
 
 import Header from "../layout/Header";
 import RegisterForm from "../layout/RegisterForm";
+import LoginForm from "../layout/LoginForm";
 import Footer from "../layout/Footer";
 
 const bg_img = require('../../images/epic-bg.png')
@@ -23,7 +24,10 @@ function Entry() {
                 src={bg_img}
                 alt="bg"></img>
             <Header />
-            <RegisterForm />
+            <div className="">
+                <RegisterForm />
+                <LoginForm />
+            </div>
             <Footer />
         </div>
     )

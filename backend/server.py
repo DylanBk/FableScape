@@ -1,19 +1,17 @@
 from modules import *
 
-app = Flask(__name__, static_folder='../frontend/build', static_url_path='/')
+app = Flask(__name__, static_folder='../frontend/build', static_url_path='')
 CORS(app)
 
-db_path = "../instance/db.db"
+db_path = "./instance/db.db"
+
+load_dotenv()
+port = os.getenv('PORT')
 
 
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
-def serve(path):
-    print(f"path: {path}")
-    if path != "" and os.path.exists(app.static_folder + '/' + path):
-        return send_from_directory(app.static_folder, path)
-    else:
-        return send_from_directory(app.static_folder, 'index.html')
+@app.route('/')
+def index(path):
+    return send_from_directory(app.static_folder, 'index.html')
 
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -26,14 +24,11 @@ def signup():
         email = data['email']
         username = data['username']
         password = data['password']
-        print(email, username, password)
 
+        with db.connect(db_path) as conn:
+            db.create_user(conn, [email, username, password])
 
-        # with db.connect(db_path) as conn:
-        #     db.create_user(conn, [email, username, password])
-        print("user created")
-
-        return redirect(url_for('/'))
+        return redirect(url_for('index'))
     return
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -54,8 +49,21 @@ def login():
                 session['email'] = user[1]
                 session['username'] = user[2]
                 session['role'] = user[4]
-                return redirect(url_for())
 
+                return redirect(url_for('index'))
+        else:
+            print("user does not exist")
+            return jsonify({"message": "User does not exist"})
+    return
+
+
+db.create_db()
+with db.connect(db_path) as conn:
+    db.default_admin(conn)
+
+with db.connect(db_path) as conn:
+    x = db.read_data(conn, "users", "*", "11")
+    print(f"user: {x}")
 
 if __name__ == "__main__":
-    app.run(port=5000)
+    app.run(port=port, debug=True)

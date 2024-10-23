@@ -1,6 +1,11 @@
+import CryptoJS from 'cryptojs'
 import React, { useState } from "react";
+import { createPath } from 'react-router-dom';
 
 const button = require('../../icons/button.png');
+
+const secret_key = process.env.REACT_APP_SECRET_KEY
+
 
 function RegisterForm() {
     const [formData, setFormData] = useState({
@@ -21,6 +26,21 @@ function RegisterForm() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        const pw = document.getElementById('register-pw').value;
+
+        const iv = CryptoJS.lib.WordArray.random(16);
+
+        const encrypted = CryptoJS.AES.encrypt(pw, secret_key, {
+            iv: iv,
+            mode: CryptoJS.mode.CFB,
+            padding: CryptoJS.pad.NoPadding
+        });
+
+        const iv_and_ciphertext = iv.concat(encrypted.ciphertext).toString(CryptoJS.enc.Base64);
+
+        document.getElementById('hidden-pw').value = iv_and_ciphertext;
+        document.getElementById('reigster-pw').value = '';
+
         const response = await fetch('/signup', {
             method: 'POST',
             headers: {
@@ -40,6 +60,7 @@ function RegisterForm() {
         <div>
             <div id="register-form">
                 <form
+                    id="register-form-form"
                     className="h-2/5 w-3/4 md:w-1/2 absolute left-1/2 top-1/2 flex flex-col items-center justify-center p-8 border border-accent bg-black bg-opacity-30 -translate-x-1/2 -translate-y-1/2 smooth-resize"
                     onSubmit={handleSubmit}
                     method="post">
@@ -61,11 +82,17 @@ function RegisterForm() {
                             required></input>
                     <label className="text-white font-cinzel">Password</label>
                         <input
+                            id="register-pw"
                             name="password"
                             className="w-full bg-white bg-opacity-30 backdrop-blur-sm sm:w-3/4 p-1 text-xs sm:te-sm md:text-lg font-poppins"
                             type="password"
                             onChange={handleChange}
                             required></input>
+                    <input
+                        id='hidden-pw'
+                        name='hidden-pw'
+                        type='hidden'
+                        ></input>
                     <button
                         className="absolute bottom-8 smooth-resize"
                         type="submit">

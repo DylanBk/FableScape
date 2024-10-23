@@ -23,10 +23,16 @@ def signup():
         data = request.get_json()
         email = data['email']
         username = data['username']
-        password = data['password']
+        enc_pw = data['hidden-pw']
+
+        enc_pw_bytes = base64.b64decode(enc_pw)
+        iv = enc_pw_bytes[:16]
+        actual_enc_pw = enc_pw_bytes[16:]
+        print(iv)
+        print(actual_enc_pw)
 
         with db.connect(db_path) as conn:
-            db.create_user(conn, [email, username, password])
+            db.create_user(conn, [email, username, actual_enc_pw])
 
         return redirect(url_for('index'))
     return

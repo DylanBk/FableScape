@@ -17,7 +17,7 @@ function Home() {
     }, []);
 
     return (
-        <div id="home-page" className="h-full w-full">
+        <div id="home-page" className="h-full w-full absolute flex flex-col justify-between">
             <Helmet>
                 <title>FableScape | Home</title>
                 <meta name="description" content="FableScape is a central hub for lovers of all things fantasy and medieval. Play stories created by the community or create your own." />

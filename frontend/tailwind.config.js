@@ -9,7 +9,9 @@ module.exports = {
         primary: "#5b442a",
         secondary: "#6e1111",
         accent: "#d9a520",
-        accent_dark: "#c4951d"
+        accent_dark: "#c4951d",
+        brown_dark: '#5C4033',
+        brown_light: '#6F4E37'
       },
       height: {
         'calc-100-12': 'calc(100% - 15rem)',

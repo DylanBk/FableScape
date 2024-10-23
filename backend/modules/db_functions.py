@@ -12,9 +12,9 @@ def connect(db_path):
 
 
 # --- SETUP ---
+
 def db_exists():
     if os.path.exists(db_path):
-        print("exists")
         return True
     else:
         print("not exist")
@@ -29,6 +29,7 @@ def create_db():
         print("connected to database")
         conn.execute("PRAGMA foreign_keys = ON")
         print("foreign keys enabled")
+        create_table(conn, "auth_keys", ["id", "code", "expires", "used", "user"], ["INTEGER PRIMARY KEY AUTOINCREMENT", "TEXT", "TEXT", "INTEGER", "INTEGER REFERENCES users(id)"])
         create_table(conn, "users", ["id", "email", "username", "password", "role"], ["INTEGER PRIMARY KEY AUTOINCREMENT", "TEXT UNIQUE", "TEXT", "TEXT", "TEXT DEFAULT 'User'"])
         create_table(conn, "stories", ["id", "name", "description", "thumbnail", "author"], ["INTEGER PRIMARY KEY AUTOINCREMENT", "TEXT", "TEXT", "BLOB", "INTEGER REFERENCES users(id)"])
         create_table(conn, "pages", ["id", "text", "image", "story"], ["INTEGER PRIMARY KEY AUTOINCREMENT", "TEXT", "BLOB", "INTEGER REFERENCES stories(id)"])
@@ -92,11 +93,9 @@ def read_data(conn, table_name, cols, id):
     c = conn.cursor()
 
     query = f"SELECT {cols} FROM {table_name} WHERE id = (?)"
-    print(query)
-    print(id)
     c.execute(query, (id, ))
 
-    return c.fetchone
+    return c.fetchone()
 
 def edit_data(conn, table_name, col, val, id):
     c = conn.cursor()
@@ -104,7 +103,7 @@ def edit_data(conn, table_name, col, val, id):
     query = f"UPDATE {table_name} SET {col} = (?) WHERE id = (?)"
     c.execute(query, val, id)
 
-    return c.rowcount
+    return c.rowcount()
 
 def remove_data(conn, table_name, id):
     c = conn.cursor()
@@ -137,18 +136,28 @@ def remove_user(conn, id):
 
 # --- STORY FUNCTIONS ---
 
-def create_story(conn, data):
-    add_data(conn, ['name', 'description', 'thumbnail', 'author'] , "stories", data)
+def create_story(conn, data): # TODO: ADD THUMBNAIL BACK TO cols
+    add_data(conn, "stories", ['name', 'description', 'author'] , data)
 
 def read_story(conn, id):
-    data = read_data(conn, "stories", "*", id)
-    return data
+    story = read_data(conn, "stories", "*", id)
+    print(f"story: {story}")
+    print(story[0])
+    pages = read_data(conn, "pages", "*", story[0])
+    print(f"pages: {pages}")
+    return story, pages
 
 def edit_story(conn, col, data, id):
     edit_data(conn, "stories", col, data, id)
 
 def remove_story(conn, id):
     remove_data(conn, "stories", id)
+
+
+# --- PAGE FUNCTIONS ---
+
+def create_page(conn, data): # TODO: ADD IMAGE BACK TO cols
+    add_data(conn, "pages", ['text', 'story'], data)
 
 
 # --- AUTH & CHECK FUNCTIONS ---
@@ -185,8 +194,13 @@ def get_user_by_email(conn, email):
     return c.fetchone
 
 
-# ! --- TESTING ---
+# ! --- DEFAULTS ---
 
 def default_admin(conn):
     add_data(conn, "users", ['email', 'username', 'password', 'role'], ['admin@domain.com', '0xadmin', 'admin', 'Admin'])
-    print('default admin account created')
+    print("default admin account created")
+
+def default_story(conn):
+    add_data(conn, "stories", ['name', 'description', 'author'], ['The Rng of Númenor', 'In the twilight of Númenor’s golden age, Arandir, a powerful lord, comes into possession of a mysterious ring that promises ultimate power and immortality. Faced with visions of grandeur and destruction, Arandir must choose between three paths: embrace the ring’s seductive power, resist its dark influence, or seek to master its magic. Each decision plunges him deeper into a web of ambition, corruption, and treachery. As Númenor teeters on the brink of ruin, Arandir’s choices will shape the fate of his kingdom and his own soul. Will he succumb to the ring’s curse, rise as a tyrant, or fight for redemption? The fate of Númenor—and Middle-earth—hangs in the balance.', 'Dylan'])
+    add_data(conn, "pages", ['text', 'story'], ['Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.', 3])
+    print("Default story created")

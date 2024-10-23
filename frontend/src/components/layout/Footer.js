@@ -5,7 +5,7 @@ function Footer() {
     return (
         <div
             id="footer"
-            className="h-44 w-full absolute bottom-0 flex flex-row mt-64 bg-black text-gray-400">
+            className="h-44 w-full absolute bottom-0 flex flex-row mt-auto bg-black text-gray-400">
             <ul className="h-fit flex flex-col justify-center gap-1 px-4 sm:px-10 md:ml-10 mt-10 text-sm smooth-resize">
                 <h4 className="mb-1 text-lg font-cinzel">Quick Links</h4>
                 <li className="w-fit active:text-white active:underline md:hover:text-white md:hover:underline"><Link to="/">Home</Link></li>

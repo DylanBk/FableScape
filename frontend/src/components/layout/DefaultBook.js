@@ -1,20 +1,97 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 export default function Book() {
-    return (
-        <div className="h-3/5 w-3/5 absolute left-1/2 top-20 sm:top-24 md:top-36 xl:top-44 flex flex-col -translate-x-1/2 smooth-transition">
-            <div
-                id="story-page"
-                className="h-full w-1/2 absolute left-0 flex flex-col border-8 border-r border-brown_dark border-r-black bg-yellow-100">
-                <div className="mt-4 text-center font-cinzel text-xl font-bold">{title}</div>
-                <div className="h-full w-full p-4 font-serif font-normal border-2 border-blue-400">{body}</div>
-            </div>
+    const [title, setTitle] = useState(null);
+    const [chapter, setChapter] = useState(null);
+    const [body, setBody] = useState(null);
+    const [options, setOptions] = useState(null);
 
-            <div
-                id="options-page"
-                className="h-full w-1/2 absolute flex flex-col right-0 border-8 border-l border-brown_dark border-l-black bg-yellow-100">
-                <div className="text-center">Options</div>
+    const [currentPage, setCurrentPage] = useState(1); // Track the current page
+
+    const fetchPage = (pageId) => {
+        let query = `/story/1/${pageId}`
+        console.log(query)
+        fetch(query)
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+                setTitle(data.story.title);
+                setChapter(data.page.chapter); 
+                setBody(data.page.body);  
+                setOptions(data.options);
+            })
+            .catch(error => console.error(`Error fetching data: ${error}`));
+    };
+
+    useEffect(() => {
+        fetchPage(currentPage);
+    }, [currentPage]);
+
+    const handleOptionClick = (next_page) => {
+
+        console.log(`next page: ${next_page}`)
+        // fetchPage(next_page)
+        setCurrentPage(next_page); // Update the current page based on the button clicked
+    };
+
+    window.onbeforeunload = function() {
+        return "Warning: All progress will be lost if you reload. Do you wish to continue?";
+    };
+
+    return (
+        <div className="h-[35rem] w-3/5 flex flex-col flex-grow mx-auto my-20 smooth-transition">
+            <div className="flex h-full">
+                <div
+                    id="story-page"
+                    className="w-1/2 flex flex-col border-8 border-r border-brown_dark border-r-black bg-yellow-100">
+                    {title ? (
+                        <div className="mt-4 text-center font-cinzel font-bold">
+                            <div className="text-xl">{title}</div>
+                            <div className="text-lg">{chapter}</div>
+                        </div>
+                    ) : (
+                        <p className="mt-4 text-center text-xl font-cinzel">Loading...</p>
+                    )}
+                    {body ? (
+                        <div className="h-full w-full p-4 font-serif font-cinzel text-sm overflow-y-scroll text-content">{body}</div>
+                    ) : (
+                        <p className="text-center text-lg font-cinzel">Loading...</p>
+                    )}
+                </div>
+    
+                <div
+                    id="options-page"
+                    className="w-1/2 flex flex-col border-8 border-l border-brown_dark border-l-black bg-yellow-100">
+                    {options ? (
+                        <div className="h-full flex flex-col items-center justify-evenly">
+                            {options.map((option, index) => (
+                                option[2] === "Play Again" ? (
+                                    <button
+                                        key={index}
+                                        className="story-option-btn text-xs font-bold sm:font-normal sm:text-sm md:text-base"
+                                        onClick={() => {
+                                            window.onbeforeunload = null;
+                                            window.location.reload();
+                                        }}>
+                                        Play Again
+                                    </button>
+                                ) : (
+                                    <button
+                                        key={option[0]}
+                                        onClick={() => handleOptionClick(option[3])}
+                                        className="story-option-btn text-xs font-bold sm:font-normal sm:text-sm md:text-base">
+                                        {option[2]}
+                                    </button>
+                                )
+                            ))}
+                        </div>
+                    ) : (   
+                        <p className="m-auto text-lg font-cinzel">Loading Options...</p>
+                    )}
+                </div>
+
             </div>
         </div>
-    )
+    );
+    
 };

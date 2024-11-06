@@ -1,13 +1,17 @@
-import CryptoJS from 'cryptojs'
-import React, { useState } from "react";
-import { createPath } from 'react-router-dom';
+// import CryptoJS from 'crypto-js'
+// import {lib as CryptoLib, mode, pad } from 'crypto-js'
+import React, { useEffect, useState } from "react";
 
 const button = require('../../icons/button.png');
 
-const secret_key = process.env.REACT_APP_SECRET_KEY
+// const secret_key = process.env.REACT_APP_SECRET_KEY
 
 
 function RegisterForm() {
+    useEffect(() => {
+        document.getElementById('error-msg').style.visibility = "hidden";
+    },[])
+
     const [formData, setFormData] = useState({
         email: "",
         username: "",
@@ -23,24 +27,49 @@ function RegisterForm() {
         });
     };
 
+    // function pad(data) {
+    //     const blockSize = 16;
+    //     const padding = blockSize - (data.length % blockSize)
+    //     const paddedData = data + String.fromCharCode(padding).repeat(padding)
+    //     return paddedData
+    // };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+        // console.log("form submission started")
 
-        const pw = document.getElementById('register-pw').value;
+        // const pw = formData.password;
+        // const padded_pw = pad(pw);
 
-        const iv = CryptoJS.lib.WordArray.random(16);
+        // console.log(`pre enc pw: ${pw}`)
+        // const lengthInBytes = pw.length;
 
-        const encrypted = CryptoJS.AES.encrypt(pw, secret_key, {
-            iv: iv,
-            mode: CryptoJS.mode.CFB,
-            padding: CryptoJS.pad.NoPadding
-        });
+        // console.log("Length of password in bytes:", lengthInBytes);
+        // console.log("Length of password after padding (if needed):", padded_pw);
 
-        const iv_and_ciphertext = iv.concat(encrypted.ciphertext).toString(CryptoJS.enc.Base64);
+        // const iv = CryptoJS.lib.WordArray.random(16);
+        // console.log("Generated IV (Hex):", iv.toString(CryptoJS.enc.Hex));
+        // console.log("IV length:", iv.sigBytes);
 
-        document.getElementById('hidden-pw').value = iv_and_ciphertext;
-        document.getElementById('reigster-pw').value = '';
+        // const encrypted = CryptoJS.AES.encrypt(pw, secret_key, {
+        //     iv: iv,
+        //     mode: CryptoJS.mode.CFB,
+        //     padding: CryptoJS.pad.NoPadding
+        // });
 
+        // const ivBase64 = CryptoJS.enc.Base64.stringify(iv);
+        // const ciphertextBase64 = encrypted.ciphertext.toString(CryptoJS.enc.Base64);
+        // console.log("IV (Base64):", ivBase64);
+        // console.log("Ciphertext (Base64):", ciphertextBase64);
+        // const iv_and_ciphertext = ivBase64 + ":" + ciphertextBase64;
+        // console.log("IV and ciphertext (Base64):", iv_and_ciphertext);
+
+        // document.getElementById('hidden-pw').value = iv_and_ciphertext;
+        // document.getElementById('register-pw').value = '';
+
+        // formData.password = iv_and_ciphertext
+
+        try {
         const response = await fetch('/signup', {
             method: 'POST',
             headers: {
@@ -50,18 +79,28 @@ function RegisterForm() {
         });
 
         if (response.ok) {
-            console.log("sign up successful")
+            document.getElementById('error-msg').textContent = "";
+            console.log("sign up successful");
+            window.location.href = '/login';
         } else {
-            console.error("sign up failed")
-        }
-    }
+            const err = await response.json();
+            console.error(`error signing up: ${err.message}`);
+            if (err.message === "user already exists") {
+                document.getElementById('error-msg').style.visibility = "visible";
+                document.getElementById('error-msg').textContent = "A user with that email address already exists";
+            };
+        };
+        } catch (error) {
+            console.log(`sign up error: ${error}`);
+        };
+    };
 
     return (
         <div>
             <div id="register-form">
                 <form
                     id="register-form-form"
-                    className="h-2/5 w-3/4 md:w-1/2 absolute left-1/2 top-1/2 flex flex-col items-center justify-center p-8 border border-accent bg-black bg-opacity-30 -translate-x-1/2 -translate-y-1/2 smooth-resize"
+                    className="h-full w-full absolute left-1/2 top-1/2 flex flex-col items-center justify-center p-8 border border-accent bg-black bg-opacity-30 -translate-x-1/2 -translate-y-1/2 smooth-resize"
                     onSubmit={handleSubmit}
                     method="post">
                     <label className="text-white font-cinzel">Username</label>
@@ -88,11 +127,15 @@ function RegisterForm() {
                             type="password"
                             onChange={handleChange}
                             required></input>
-                    <input
+                    {/*<input
                         id='hidden-pw'
                         name='hidden-pw'
                         type='hidden'
-                        ></input>
+                        ></input>*/}
+                    <p
+                        id="error-msg"
+                        className="p-1 mt-4 bg-black bg-opacity-80 text-red-500 text-xs sm:text-sm md:text-base font-poppins">
+                    </p>
                     <button
                         className="absolute bottom-8 smooth-resize"
                         type="submit">
@@ -107,6 +150,6 @@ function RegisterForm() {
             <div id="login-form"></div>
         </div>
     )
-}
+};
 
 export default RegisterForm;

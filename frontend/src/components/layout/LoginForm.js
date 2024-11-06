@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const button = require('../../icons/button.png');
 
+
 function LoginForm() {
+    useEffect(() => {
+        document.getElementById('error-msg').style.visibility = "hidden";
+    }, [])
+
     const [formData, setFormData] = useState({
         email: "",
-        username: "",
         password: ""
     });
 
@@ -21,35 +25,44 @@ function LoginForm() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const response = await fetch('/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        });
+        try {
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
 
-        if (response.ok) {
-            console.log("login successful")
-        } else {
-            console.error("login failed")
-        }
-    }
+            if (response.ok) {
+                document.getElementById('error-msg').textContent = "";
+                console.log("login successful");
+                window.location.href = '/';
+                document.cookie = "loggedIn=True";
+            } else {
+                const err = await response.json();
+                console.error(`error logging in: ${err.message}`);
+                if (err.message === "incorrect password") {
+                    document.getElementById('error-msg').style.visibility = "visible";
+                    document.getElementById('error-msg').textContent = "Incorrect password, please try again";
+                } else if (err.message === "user does not exist") {
+                    document.getElementById('error-msg').style.visibility = "visible";
+                    document.getElementById('error-msg').textContent = "A user with that email address does not exist";
+                };
+            };
+        } catch (error) {
+            console.log(`login error: ${error}`)
+        };
+    };
 
     return (
         <div>
-            <div id="Login-form">
+            <div id="login-form">
                 <form
-                    className="h-2/5 w-3/4 md:w-1/2 absolute left-1/2 top-1/2 flex flex-col items-center justify-center p-8 border border-accent bg-black bg-opacity-30 -translate-x-1/2 -translate-y-1/2 smooth-resize"
+                    id='login-form-form'
+                    className="h-full w-full absolute left-1/2 top-1/2 flex flex-col items-center justify-center p-8 border border-accent bg-black bg-opacity-30 -translate-x-1/2 -translate-y-1/2 smooth-resize"
                     onSubmit={handleSubmit}
                     method="post">
-                    <label className="text-white font-cinzel">Username</label>
-                        <input
-                            name="username"
-                            className="w-full bg-white bg-opacity-30 backdrop-blur-sm sm:w-3/4 p-1 text-xs sm:text-sm md:text-lg font-poppins"
-                            type="text"
-                            onChange={handleChange}
-                            required></input>
                     <label className="text-white font-cinzel">Email</label>
                         <input
                             name="email"
@@ -57,15 +70,20 @@ function LoginForm() {
                             type="email"
                             placeholder="name@domain.com"
                             onChange={handleChange}
-                            autoComplete={true}
+                            autoComplete="true"
                             required></input>
                     <label className="text-white font-cinzel">Password</label>
                         <input
                             name="password"
-                            className="w-full bg-white bg-opacity-30 backdrop-blur-sm sm:w-3/4 p-1 text-xs sm:te-sm md:text-lg font-poppins"
+                            className="w-full bg-white bg-opacity-30 backdrop-blur-sm sm:w-3/4 p-1 text-xs sm:text-sm md:text-lg font-poppins"
                             type="password"
                             onChange={handleChange}
+                            autoComplete="true"
                             required></input>
+                    <p
+                        id="error-msg"
+                        className="p-1 mt-4 bg-black bg-opacity-80 text-red-500 text-xs sm:text-sm md:text-base font-poppins">
+                    </p>
                     <button
                         className="absolute bottom-8 smooth-resize"
                         type="submit">

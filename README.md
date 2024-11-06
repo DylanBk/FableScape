@@ -4,7 +4,7 @@
 
 ### Open a fresh terminal and run `npm install`
 
-### Run `cd backend` and then run `pip install -r path/to/requirements.txt`
+### Open a new terminal and run `cd backend` and then run `pip install -r path/to/requirements.txt`
 
 ### Open a new terminal and run `cd frontend` and then run `npm install`
 

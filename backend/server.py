@@ -15,39 +15,39 @@ app.secret_key = SECRET_KEY
 
 # ! --- TESTING ---
 
-def get_credentials():
-    creds = None
+# def get_credentials():
+#     creds = None
 
-    if os.path.exists('token.json'):
-        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+#     if os.path.exists('token.json'):
+#         creds = Credentials.from_authorized_user_file('token.json', SCOPES)
 
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
-            creds = flow.run_local_server(port=0)  
-        with open('token.json', 'w') as token:
-            token.write(creds.to_json())
+#     if not creds or not creds.valid:
+#         if creds and creds.expired and creds.refresh_token:
+#             creds.refresh(Request())
+#         else:
+#             flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
+#             creds = flow.run_local_server(port=0)  
+#         with open('token.json', 'w') as token:
+#             token.write(creds.to_json())
 
-    return creds
+#     return creds
 
-def send_email(creds, to, subject, body):
-    service = build('gmail', 'v1', credentials=creds)
+# def send_email(creds, to, subject, body):
+#     service = build('gmail', 'v1', credentials=creds)
 
-    message = MIMEText(body)
-    message['to'] = to
-    message['subject'] = subject
+#     message = MIMEText(body)
+#     message['to'] = to
+#     message['subject'] = subject
 
-    raw_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
+#     raw_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
 
-    message = {'raw': raw_message}
+#     message = {'raw': raw_message}
 
-    try:
-        message = (service.users().messages().send(userId="me", body=message).execute())
-        print(f"Message Id: {message['id']}")
-    except Exception as error:
-        print(f"An error occurred: {error}")
+#     try:
+#         message = (service.users().messages().send(userId="me", body=message).execute())
+#         print(f"Message Id: {message['id']}")
+#     except Exception as error:
+#         print(f"An error occurred: {error}")
 
 
 # --- UTILS ---
@@ -75,6 +75,8 @@ def send_email(creds, to, subject, body):
 
 #     return unpadded_message.decode('utf-8')
 
+# !--------------------------------------------------------------------------------------------------------------------
+
 
 # --- ROUTES ---
 
@@ -98,6 +100,7 @@ def signup():
         with db.connect(db_path) as conn:
             check = db.user_exists(conn, email)
             if check:
+                print(check)
                 return jsonify({"message": "user already exists"}), 400
             else:
                 db.create_user(conn, [email, username, pw])
@@ -162,19 +165,17 @@ def upload_pages(id):
         with db.connect(db_path) as conn:
             db.create_page(conn, [text, id])
 
+# TODO: remove once the func below is sorted out
+# @app.route('/story/<int:id>', methods=['GET', 'POST'])
+# def get_story(id):
+#     with db.connect(db_path) as conn:
+#         story, pages, options = db.read_story(conn, id)
 
-@app.route('/story/<int:id>', methods=['GET', 'POST'])
-def get_story(id):
-    with db.connect(db_path) as conn:
-        story, pages, options = db.read_story(conn, id)
-
-        return jsonify({
-            "story": story,
-            "pages": pages,
-            "options": options
-        })
-
-#! -------------------------------------------------------------------------------------
+#         return jsonify({
+#             "story": story,
+#             "pages": pages,
+#             "options": options
+        # })
 
 @app.route('/story/<int:story_id>/<int:page_id>', methods=['GET', 'POST'])
 def get_page(story_id, page_id):
@@ -195,7 +196,6 @@ def get_page(story_id, page_id):
             "options": options
         })
 
-#! -------------------------------------------------------------------------------------
 
 # --- ACCOUNT / SETTINGS ROUTES ---
 
@@ -274,6 +274,7 @@ def logout():
 #     "Test Subject",
 #     "Hello from Python!"
 # )
+# ! --------------------------------------------
 
 
 db.create_db()
@@ -285,6 +286,7 @@ with db.connect(db_path) as conn:
     db.update_def_admin(conn)
 # with db.connect(db_path) as conn:
 #     db.default_story(conn)
+# ! ------------------------------------------
 
 
 if __name__ == "__main__":

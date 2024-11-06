@@ -199,11 +199,12 @@ def check_pw(conn, id, user_pw):
 def user_exists(conn, email):
     c = conn.cursor()
 
-    res = c.execute("SELECT * FROM users WHERE email = (?)", (email, ))
-    res = c.fetchone
+    res = c.execute("SELECT * FROM users WHERE email = ?", (email, ))
+    res = c.fetchone()
 
     if res:
-        return True
+        # print(res)
+        return res
     return False
 
 def get_user_by_email(conn, email):
@@ -221,8 +222,3 @@ def create_def_admin(conn):
 def update_def_admin(conn):
     edit_user(conn, "role", "Admin", 1)
     print("admin status granted")
-
-def default_story(conn):
-    add_data(conn, "stories", ['name', 'description', 'author'], ['The Rng of Númenor', 'In the twilight of Númenor’s golden age, Arandir, a powerful lord, comes into possession of a mysterious ring that promises ultimate power and immortality. Faced with visions of grandeur and destruction, Arandir must choose between three paths: embrace the ring’s seductive power, resist its dark influence, or seek to master its magic. Each decision plunges him deeper into a web of ambition, corruption, and treachery. As Númenor teeters on the brink of ruin, Arandir’s choices will shape the fate of his kingdom and his own soul. Will he succumb to the ring’s curse, rise as a tyrant, or fight for redemption? The fate of Númenor—and Middle-earth—hangs in the balance.', 'Dylan'])
-    add_data(conn, "pages", ['text', 'story'], ['Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.', 3])
-    print("Default story created")

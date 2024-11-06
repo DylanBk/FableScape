@@ -6,15 +6,13 @@ export default function Book() {
     const [body, setBody] = useState(null);
     const [options, setOptions] = useState(null);
 
-    const [currentPage, setCurrentPage] = useState(1); // Track the current page
+    const [currentPage, setCurrentPage] = useState(1);
 
     const fetchPage = (pageId) => {
         let query = `/story/1/${pageId}`
-        console.log(query)
         fetch(query)
             .then(res => res.json())
             .then(data => {
-                console.log(data)
                 setTitle(data.story.title);
                 setChapter(data.page.chapter); 
                 setBody(data.page.body);  
@@ -29,9 +27,8 @@ export default function Book() {
 
     const handleOptionClick = (next_page) => {
 
-        console.log(`next page: ${next_page}`)
-        // fetchPage(next_page)
-        setCurrentPage(next_page); // Update the current page based on the button clicked
+        console.log(`button clicked, next page: ${next_page}`)
+        setCurrentPage(next_page);
     };
 
     window.onbeforeunload = function() {
@@ -79,7 +76,7 @@ export default function Book() {
                                     <button
                                         key={option[0]}
                                         onClick={() => handleOptionClick(option[3])}
-                                        className="story-option-btn text-xs font-bold sm:font-normal sm:text-sm md:text-base">
+                                        className="story-option-btn text-xs font-bold sm:font-normal sm:text-sm md:text-base z-10">
                                         {option[2]}
                                     </button>
                                 )

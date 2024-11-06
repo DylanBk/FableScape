@@ -1,3 +1,18 @@
+# How to run this app
+
+### Open the root folder in your chosen IDE
+
+### Open a fresh terminal and run `npm install`
+
+### Run `cd backend` and then run `pip install -r path/to/requirements.txt`
+
+### Open a new terminal and run `cd frontend` and then run `npm install`
+
+### The app is now ready to be run, in your backend terminal run `npm run start`
+### Finally, run `server.py` from the IDE and in your browser go to http://localhost:3000
+
+<br><br>
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

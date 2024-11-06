@@ -37,6 +37,7 @@ function LoginForm() {
             if (response.ok) {
                 document.getElementById('error-msg').textContent = "";
                 console.log("login successful");
+                window.onbeforeunload = null;
                 window.location.href = '/';
                 document.cookie = "loggedIn=True";
             } else {

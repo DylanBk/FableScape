@@ -81,9 +81,11 @@ function RegisterForm() {
         if (response.ok) {
             document.getElementById('error-msg').textContent = "";
             console.log("sign up successful");
+            window.onbeforeunload = null;
             window.location.href = '/login';
         } else {
             const err = await response.json();
+            console.log(`error: ${err}`)
             console.error(`error signing up: ${err.message}`);
             if (err.message === "user already exists") {
                 document.getElementById('error-msg').style.visibility = "visible";

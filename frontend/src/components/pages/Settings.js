@@ -7,6 +7,9 @@ const authCheck = () => {
     return cookies.some(cookie => cookie.startsWith('loggedIn='));
 };
 
+window.onbeforeunload = null;
+
+
 function Settings() {
     const isLoggedIn = authCheck();
 
@@ -34,6 +37,7 @@ function Settings() {
     };
 
     if (!isLoggedIn) {
+        window.onbeforeunload = null;
         window.location.href = '/login';
     }
 
@@ -58,6 +62,7 @@ function Settings() {
             })
             .then(() => {
                 document.cookie = 'loggedIn=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
+                window.onbeforeunload = null;
                 window.location.href = '/login';
             })
             .catch(error => console.log(`error logging out: ${error}`));
@@ -82,6 +87,7 @@ function Settings() {
             })
             .then(() => {
                 document.cookie = 'loggedIn=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
+                window.onbeforeunload = null;
                 window.location.href = '/';
             })
             .catch(error => console.log("account deletion failed: ", error));

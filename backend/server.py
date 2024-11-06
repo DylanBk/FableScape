@@ -5,10 +5,13 @@ CORS(app)
 
 db_path = "./instance/db.db"
 
-load_dotenv()
-PORT = os.getenv('PORT')
-SECRET_KEY = os.getenv('SECRET_KEY')
+# load_dotenv()
+# PORT = os.getenv('PORT')
+# SECRET_KEY = os.getenv('SECRET_KEY')
 # ENC_SECRET_KEY = b'1234567890123456'
+
+PORT = 5000
+SECRET_KEY = 'secret'
 
 app.secret_key = SECRET_KEY
 

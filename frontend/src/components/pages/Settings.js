@@ -155,11 +155,11 @@ function Settings() {
         <div>
             <Header />
 
-            <div className="h-96 w-4/5 relative p-4 rounded-lg mx-auto my-8 bg-gray-300">
+            <div className="h-96 sm:h-max lg:h-96 w-4/5 relative p-4 rounded-lg mx-auto my-8 bg-gray-300 smooth-resize">
                 {userData ? (
                     <div className="flex flex-col items-center">
                         <button
-                            className="absolute top-4 right-4 px-4 py-2 rounded border-2 border-red-500 hover:border-red-700 text-red-500 hover:text-red-700 transition-colors"
+                            className="absolute bottom-4 sm:bottom-auto sm:top-4 sm:right-4 px-3 py-1 md:px-4 md:py-2 rounded border-2 border-red-500 hover:border-red-700 text-red-500 hover:text-red-700 transition-colors smooth-resize"
                             onClick={handleLogout}>
                             Logout
                         </button>

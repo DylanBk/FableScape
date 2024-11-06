@@ -1,6 +1,6 @@
 # How to run this app
 
-### Open the root folder in your chosen IDE
+### Open the root folder (FableSCape-master) in your chosen IDE
 
 ### Open a fresh terminal and run `npm install`
 

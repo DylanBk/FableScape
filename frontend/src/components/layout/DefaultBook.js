@@ -50,7 +50,7 @@ export default function Book() {
                         <p className="mt-4 text-center text-xl font-cinzel">Loading...</p>
                     )}
                     {body ? (
-                        <div className="h-full w-full p-4 font-serif font-cinzel text-sm overflow-y-scroll text-content">{body}</div>
+                        <div className="h-full w-full p-4 mb-4 font-serif font-cinzel text-sm overflow-y-scroll text-content">{body}</div>
                     ) : (
                         <p className="text-center text-lg font-cinzel">Loading...</p>
                     )}
